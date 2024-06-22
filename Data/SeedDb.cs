@@ -9,29 +9,29 @@ namespace NetDexQL.Data;
 public static class SeedDb
 {
     private static readonly MonType[] TypeList =
-        [
-            new MonType { Name = "normal" },
-            new MonType { Name = "water" },
-            new MonType { Name = "fire" },
-            new MonType { Name = "grass" },
-            new MonType { Name = "psychic" },
-            new MonType { Name = "dark" },
-            new MonType { Name = "ghost" },
-            new MonType { Name = "steel" },
-            new MonType { Name = "fairy" },
-            new MonType { Name = "electric" },
-            new MonType { Name = "poison" },
-            new MonType { Name = "bug" },
-            new MonType { Name = "fighting" },
-            new MonType { Name = "ice" },
-            new MonType { Name = "ground" },
-            new MonType { Name = "rock" },
-            new MonType { Name = "flying" },
-            new MonType { Name = "dragon" }
-        ];
+    [
+        new MonType { Name = "normal" },
+        new MonType { Name = "water" },
+        new MonType { Name = "fire" },
+        new MonType { Name = "grass" },
+        new MonType { Name = "psychic" },
+        new MonType { Name = "dark" },
+        new MonType { Name = "ghost" },
+        new MonType { Name = "steel" },
+        new MonType { Name = "fairy" },
+        new MonType { Name = "electric" },
+        new MonType { Name = "poison" },
+        new MonType { Name = "bug" },
+        new MonType { Name = "fighting" },
+        new MonType { Name = "ice" },
+        new MonType { Name = "ground" },
+        new MonType { Name = "rock" },
+        new MonType { Name = "flying" },
+        new MonType { Name = "dragon" }
+    ];
 
     private static readonly HttpClient Client = new();
-    
+
     public static async Task Initialize(IServiceProvider serviceProvider)
     {
         var context = new ApplicationDbContext(
@@ -62,15 +62,15 @@ public static class SeedDb
 
         var res = await Client.GetStringAsync(apiUrl);
         var allMons = JObject.Parse(res)["results"] as JArray;
-        
+
         if (allMons == null)
         {
             Console.WriteLine("Something went wrong contacting pokéapi, exiting seed!");
             Environment.Exit(-1302);
         }
-        
+
         var dbCount = context.Pokemon.Count();
-        
+
         while (dbCount < allMons.Count)
         {
             try
@@ -89,25 +89,18 @@ public static class SeedDb
     private static async void AddMon(string rawMonData, MonType[] typeList, ApplicationDbContext context)
     {
         var newMonRaw = JObject.Parse(rawMonData);
-        Console.WriteLine($"{newMonRaw["base_experience"]}");
-        var newMon = new Pokemon
-        {
-            Name = (string)newMonRaw["name"],
-            Height = newMonRaw["height"].Type == JTokenType.Null ? 0 : (int)newMonRaw["height"],
-            Weight = newMonRaw["weight"].Type == JTokenType.Null ? 0 : (int)newMonRaw["weight"],
-            BaseExperience = newMonRaw["base_experience"].Type == JTokenType.Null ? 0 : (int)newMonRaw["base_experience"],
-            Order = newMonRaw["order"].Type == JTokenType.Null ? -1 : (int)newMonRaw["order"]
-        };
+        var newMon = CreateMonFromApi(newMonRaw);
+        
         context.Pokemon.Add(newMon);
 
-        var types = JObject.Parse(rawMonData)["types"] as JArray;
+        var types = newMonRaw["types"] as JArray;
 
         foreach (var type in types!)
         {
             var typeName = (string)type["type"]!["name"]!;
             var typeSlot = (int)type["slot"]!;
             var typeId = typeList.First(t => t.Name == typeName).Id;
-            
+
             await context.PokemonOnTypes.AddAsync(
                 new PokemonOnType
                 {
@@ -116,7 +109,21 @@ public static class SeedDb
                     IsPrimary = typeSlot == 1
                 });
         }
-        
+
         await context.SaveChangesAsync();
+    }
+
+    private static Pokemon CreateMonFromApi(JObject newMonRaw)
+    {
+        return new Pokemon
+        {
+            Name = (string)newMonRaw["name"],
+            Height = newMonRaw["height"].Type == JTokenType.Null ? 0 : (int)newMonRaw["height"],
+            Weight = newMonRaw["weight"].Type == JTokenType.Null ? 0 : (int)newMonRaw["weight"],
+            BaseExperience = newMonRaw["base_experience"].Type == JTokenType.Null
+                ? 0
+                : (int)newMonRaw["base_experience"],
+            Order = newMonRaw["order"].Type == JTokenType.Null ? -1 : (int)newMonRaw["order"]
+        };
     }
 }
