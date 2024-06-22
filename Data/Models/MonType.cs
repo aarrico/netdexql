@@ -3,29 +3,30 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace NetDexQL.Data.Models;
 
-public class Pokemon
+public class MonType
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; }
-    public  int Height { get; set; }
-    public int Weight { get; set; }
-    public int? BaseExperience { get; set; }
-    public int Order { get; set; }
 
-    public List<MonType> MonTypes { get; } = [];
+    public List<Pokemon> Pokemon { get; } = [];
     public List<PokemonOnType> PokemonTypes { get; } = [];
 }
-
-public class PokemonConfiguration : IEntityTypeConfiguration<Pokemon>
+    
+public class TypeConfiguration : IEntityTypeConfiguration<MonType>
 {
-    public void Configure(EntityTypeBuilder<Pokemon> builder)
+    public void Configure(EntityTypeBuilder<MonType> builder)
     {
         builder.HasKey(p => p.Id);
 
-        builder.HasIndex(p => p.Name).IsUnique();
-
+        builder.HasIndex(t => t.Name);
+        
         builder
             .Property(p => p.Name)
             .HasMaxLength(50);
+
+        builder
+            .HasMany(t => t.Pokemon)
+            .WithMany(t => t.MonTypes)
+            .UsingEntity<PokemonOnType>();
     }
 }

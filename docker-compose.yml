@@ -25,13 +25,13 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=pokedex;Database=mydatabase;Username=myuser;Password=mypassword
+      - ConnectionStrings__DefaultConnection=Host=pokedex;Database=mydatabase;Username=myuser;Password=mypassword;IncludeErrorDetail=true
     volumes:
       - pgdata:/app/db
 

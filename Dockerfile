@@ -16,7 +16,7 @@ WORKDIR /app
 COPY --from=build /app/out .
 
 # Expose the port the app runs on
-EXPOSE 5000
+EXPOSE 8080
 
 # Run the app
 ENTRYPOINT ["dotnet", "netdexQL.dll"]

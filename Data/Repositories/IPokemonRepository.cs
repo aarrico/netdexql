@@ -1,12 +1,10 @@
 using NetDexQL.Data.Models;
 
-namespace NetDexQL.Data.Repositories
+namespace NetDexQL.Data.Repositories;
+
+public interface IPokemonRepository
 {
-    public interface IPokemonRepository
-    {
-        Task<int> GetMonCount();
-        Task<List<Pokemon>> GetAllMons();
-        Task<Pokemon?> GetMonById(Guid id);
-        Task<Pokemon> AddMon(Pokemon pokemon);
-    }
+    Task<int> GetMonCount();
+    Task<List<Pokemon>> GetAllMons();
+    Task<Pokemon?> GetMonById(Guid id);
 }
