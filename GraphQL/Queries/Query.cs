@@ -8,6 +8,9 @@ public class Query
     public async Task<List<Pokemon>> GetPokemon([Service] IPokemonRepository pokemonRepository) =>
         await pokemonRepository.GetAllMons();
 
-    public List<Pokemon> GetMonsForType([Service] IPokemonRepository pokemonRepository, Guid typeId) =>
-        pokemonRepository.GetMonsForType(typeId);
+    public List<Pokemon> GetMonsByTypeId([Service] IPokemonRepository pokemonRepository, Guid typeId) =>
+        pokemonRepository.GetMonsByTypeId(typeId);
+
+    public List<Pokemon> GetMonsByTypeName([Service] IPokemonRepository pokemonRepository, string typeName) =>
+        pokemonRepository.GetMonsByTypeName(typeName);
 }
