@@ -6,5 +6,5 @@ public interface IPokemonRepository
 {
     Task<int> GetMonCount();
     Task<List<Pokemon>> GetAllMons();
-    Task<Pokemon?> GetMonById(Guid id);
+    List<Pokemon> GetMonsForType(Guid typeId);
 }

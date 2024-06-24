@@ -1,7 +1,6 @@
 using NetDexQL.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace NetDexQL.Data.Repositories;
 
 public class PokemonRepository : IPokemonRepository
@@ -28,5 +27,13 @@ public class PokemonRepository : IPokemonRepository
         return await _context.Pokemon.FindAsync(id);
     }
 
-    
+    public List<Pokemon> GetMonsForType(Guid typeId)
+    {
+        return _context.Types
+            .Include(monType => monType.Pokemon)
+            .FirstOrDefault(t => t.Id == typeId)
+            ?.Pokemon
+            .OrderBy(p => p.Order)
+            .ToList() ?? [];
+    }
 }
