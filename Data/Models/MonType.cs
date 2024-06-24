@@ -10,6 +10,8 @@ public class MonType
 
     public List<Pokemon> Pokemon { get; } = [];
     public List<PokemonOnType> PokemonTypes { get; } = [];
+    public List<TypeEffectiveness> AttackingTypeEffectivenesses { get; } = [];
+    public List<TypeEffectiveness> DefendingTypeEffectivenesses { get; } = [];
 }
     
 public class TypeConfiguration : IEntityTypeConfiguration<MonType>
@@ -23,10 +25,5 @@ public class TypeConfiguration : IEntityTypeConfiguration<MonType>
         builder
             .Property(p => p.Name)
             .HasMaxLength(50);
-
-        builder
-            .HasMany(t => t.Pokemon)
-            .WithMany(t => t.MonTypes)
-            .UsingEntity<PokemonOnType>();
     }
 }

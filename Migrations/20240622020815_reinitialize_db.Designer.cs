@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetDexQL.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace netdexQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240622020815_reinitialize_db")]
+    partial class reinitialize_db
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,29 +109,6 @@ namespace netdexQL.Migrations
                     b.ToTable("pokemon_on_types", (string)null);
                 });
 
-            modelBuilder.Entity("NetDexQL.Data.Models.TypeEffectiveness", b =>
-                {
-                    b.Property<Guid>("AttackingTypeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("attacking_type_id");
-
-                    b.Property<Guid>("DefendingTypeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("defending_type_id");
-
-                    b.Property<double>("Multiplier")
-                        .HasColumnType("double precision")
-                        .HasColumnName("multiplier");
-
-                    b.HasKey("AttackingTypeId", "DefendingTypeId")
-                        .HasName("pk_type_effectivenesses");
-
-                    b.HasIndex("DefendingTypeId")
-                        .HasDatabaseName("ix_type_effectivenesses_defending_type_id");
-
-                    b.ToTable("type_effectivenesses", (string)null);
-                });
-
             modelBuilder.Entity("NetDexQL.Data.Models.PokemonOnType", b =>
                 {
                     b.HasOne("NetDexQL.Data.Models.MonType", null)
@@ -146,33 +126,8 @@ namespace netdexQL.Migrations
                         .HasConstraintName("fk_pokemon_on_types_pokemon_pokemon_id");
                 });
 
-            modelBuilder.Entity("NetDexQL.Data.Models.TypeEffectiveness", b =>
-                {
-                    b.HasOne("NetDexQL.Data.Models.MonType", "AttackingType")
-                        .WithMany("AttackingTypeEffectivenesses")
-                        .HasForeignKey("AttackingTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_type_effectivenesses_types_attacking_type_id");
-
-                    b.HasOne("NetDexQL.Data.Models.MonType", "DefendingType")
-                        .WithMany("DefendingTypeEffectivenesses")
-                        .HasForeignKey("DefendingTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_type_effectivenesses_types_defending_type_id");
-
-                    b.Navigation("AttackingType");
-
-                    b.Navigation("DefendingType");
-                });
-
             modelBuilder.Entity("NetDexQL.Data.Models.MonType", b =>
                 {
-                    b.Navigation("AttackingTypeEffectivenesses");
-
-                    b.Navigation("DefendingTypeEffectivenesses");
-
                     b.Navigation("PokemonTypes");
                 });
 
