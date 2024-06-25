@@ -1,7 +1,5 @@
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using NetDexQL.Data.Models;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace NetDexQL.Data;
