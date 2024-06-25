@@ -16,9 +16,9 @@ public static class SeedDb
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
 
         var typeIds = PopulateTypeTable(context);
-
-        await PopulatePokemonTable(context, typeIds);
         PopulateTypeEffectivenessTable(typeIds, context);
+        
+        await PopulatePokemonTable(context, typeIds);
     }
 
     private static Dictionary<string, Guid> PopulateTypeTable(ApplicationDbContext context)
@@ -128,6 +128,11 @@ public static class SeedDb
 
     private static void PopulateTypeEffectivenessTable(Dictionary<string, Guid> typeIds, ApplicationDbContext context)
     {
+        if (context.TypeEffectivenesses.Any())
+        {
+            return;
+        }
+        
         var allEffectivenesses = new List<TypeEffectiveness>();
         // NORMAL
         allEffectivenesses.Add(new TypeEffectiveness(typeIds["normal"], typeIds["normal"], 1.0));
