@@ -8,10 +8,18 @@ public class MonType
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; }
 
-    public List<Pokemon> Pokemon { get; } = [];
-    public List<PokemonOnType> PokemonTypes { get; } = [];
+    public List<PokemonOnType> PokemonTypes { get; set; } = [];
+    
     public List<TypeEffectiveness> AttackingTypeEffectivenesses { get; } = [];
     public List<TypeEffectiveness> DefendingTypeEffectivenesses { get; } = [];
+}
+
+public class MonTypeType : ObjectType<MonType>
+{
+    protected override void Configure(IObjectTypeDescriptor<MonType> descriptor)
+    {
+        descriptor.Field(p => p.Name);
+    }
 }
     
 public class TypeConfiguration : IEntityTypeConfiguration<MonType>

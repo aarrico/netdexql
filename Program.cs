@@ -24,10 +24,11 @@ builder.Services.AddScoped<IMonTypeRepository, MonTypeRepository>();
 
 builder.Services
     .AddGraphQLServer()
-    .AddQueryType<Query>()
-    .AddType<Pokemon>()
-    .AddType<MonType>()
-    .RegisterDbContext<ApplicationDbContext>();
+    .RegisterDbContext<ApplicationDbContext>()
+    .AddQueryType<QueryType>()
+    .AddProjections()
+    .AddFiltering()
+    .AddType<PokemonFilterInputType>();
 
 
 var app = builder.Build();

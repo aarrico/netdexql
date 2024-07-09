@@ -1,3 +1,4 @@
+using NetDexQL.Data;
 using NetDexQL.Data.Models;
 using NetDexQL.Data.Repositories;
 
@@ -5,12 +6,21 @@ namespace NetDexQL.GraphQL.Queries;
 
 public class Query
 {
-    public async Task<List<Pokemon>> GetPokemon([Service] IPokemonRepository pokemonRepository) =>
-        await pokemonRepository.GetAllMons();
+    public IQueryable<Pokemon> GetMons([Service] ApplicationDbContext dbContext) => dbContext.Pokemon;
 
-    public List<Pokemon> GetMonsByTypeId([Service] IPokemonRepository pokemonRepository, Guid typeId) =>
-        pokemonRepository.GetMonsByTypeId(typeId);
+    public IQueryable<MonType> GetMonTypes([Service] ApplicationDbContext dbContext) => dbContext.MonTypes;
+}
 
-    public List<Pokemon> GetMonsByTypeName([Service] IPokemonRepository pokemonRepository, string typeName) =>
-        pokemonRepository.GetMonsByTypeName(typeName);
+public class QueryType : ObjectType<Query>
+{
+    protected override void Configure(IObjectTypeDescriptor<Query> descriptor)
+    {
+        descriptor
+            .Field(q => q.GetMons(default))
+            .UseFiltering<PokemonFilterInputType>();
+
+        descriptor
+            .Field(q => q.GetMonTypes(default))
+            .UseFiltering<MonType>();
+    }
 }

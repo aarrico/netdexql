@@ -21,6 +21,7 @@ services:
 
   backend:
     image: netdexql:latest
+    container_name: pokeapi
     build:
       context: .
       dockerfile: Dockerfile

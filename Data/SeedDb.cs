@@ -21,7 +21,7 @@ public static class SeedDb
 
     private static Dictionary<string, Guid> PopulateTypeTable(ApplicationDbContext context)
     {
-        if (!context.Types.Any())
+        if (!context.MonTypes.Any())
         {
             var typeList = new[]
             {
@@ -45,11 +45,11 @@ public static class SeedDb
                 new MonType { Name = "dragon" }
             };
 
-            context.Types.AddRange(typeList);
+            context.MonTypes.AddRange(typeList);
             context.SaveChanges();
         }
 
-        return context.Types.ToDictionary(t => t.Name, t => t.Id);
+        return context.MonTypes.ToDictionary(t => t.Name, t => t.Id);
     }
 
     private static async Task PopulatePokemonTable(ApplicationDbContext context, Dictionary<string, Guid> typeIds)

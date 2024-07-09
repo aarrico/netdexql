@@ -6,7 +6,7 @@ namespace NetDexQL.Data;
 public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<Pokemon> Pokemon { get; set; }
-    public DbSet<MonType> Types { get; set; }
+    public DbSet<MonType> MonTypes { get; set; }
     public DbSet<PokemonOnType> PokemonOnTypes { get; set; }
     public DbSet<TypeEffectiveness> TypeEffectivenesses { get; set; }
 
@@ -26,13 +26,18 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     {
         modelBuilder.ApplyConfiguration(new PokemonConfiguration());
         modelBuilder.ApplyConfiguration(new TypeConfiguration());
+        modelBuilder.ApplyConfiguration(new PokemonOnTypeConfiguration());
         modelBuilder.ApplyConfiguration(new TypeEffectivenessConfiguration());
-        
-         modelBuilder.Entity<MonType>()
-            .HasMany(t => t.Pokemon)
-            .WithMany(t => t.MonTypes)
-            .UsingEntity<PokemonOnType>();
 
+        modelBuilder.Entity<PokemonOnType>()
+            .HasOne(pt => pt.Pokemon)
+            .WithMany(p => p.PokemonTypes)
+            .HasForeignKey(pt => pt.PokemonId);
+
+        modelBuilder.Entity<PokemonOnType>()
+            .HasOne(pt => pt.MonType)
+            .WithMany(p => p.PokemonTypes)
+            .HasForeignKey(pt => pt.MonTypeId);
 
         modelBuilder.Entity<TypeEffectiveness>()
             .HasOne(te => te.AttackingType)
