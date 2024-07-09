@@ -25,7 +25,7 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new PokemonConfiguration());
-        modelBuilder.ApplyConfiguration(new TypeConfiguration());
+        modelBuilder.ApplyConfiguration(new MonTypeConfiguration());
         modelBuilder.ApplyConfiguration(new PokemonOnTypeConfiguration());
         modelBuilder.ApplyConfiguration(new TypeEffectivenessConfiguration());
 

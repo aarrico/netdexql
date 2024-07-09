@@ -22,7 +22,7 @@ public class MonTypeType : ObjectType<MonType>
     }
 }
     
-public class TypeConfiguration : IEntityTypeConfiguration<MonType>
+public class MonTypeConfiguration : IEntityTypeConfiguration<MonType>
 {
     public void Configure(EntityTypeBuilder<MonType> builder)
     {

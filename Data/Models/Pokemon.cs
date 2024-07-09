@@ -48,8 +48,6 @@ public class PokemonFilterInputType : FilterInputType<Pokemon>
     protected override void Configure(IFilterInputTypeDescriptor<Pokemon> descriptor)
     {
         descriptor.BindFieldsExplicitly();
-
-        descriptor.BindFieldsExplicitly();
         descriptor.Field(p => p.Name);
         descriptor.Field(p => p.Order);
         descriptor.Field(p => p.Height);
